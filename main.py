@@ -1,11 +1,14 @@
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pandas as pd
+from fastapi import FastAPI
 
+app = FastAPI()
 
 # Devuelve la cantidad de items y porcentaje de contenido Free por año para la empresa desarrolladora ingresada como
 # parametro.
-def developer (desarrollador):
+@app.get("/developer/{desarrollador}")
+def developer (desarrollador : str):
     
     # Importa el archivo 
     df_dev = pd.read_parquet('Archivos API/def_developer.parquet')
@@ -37,7 +40,8 @@ def developer (desarrollador):
 
 # Devuelve la cantidad de dinero gastado por el usuario ingresado como parametro, el porcentaje de recomendación en 
 # base a reviews.recommend y cantidad de items.
-def userdata (user_id):
+@app.get("/userdata/{user_id}")
+def userdata (user_id : str):
 
     # Importa el archivo 
     df_user = pd.read_parquet('Archivos API/def_userdata.parquet')
@@ -59,7 +63,8 @@ def userdata (user_id):
 
 # Devuelve el usuario que acumula más horas jugadas para el género ingresado como parametro y una lista de la 
 # acumulación de horas jugadas por año de lanzamiento.
-def UserForGenre (genero):
+@app.get("/UserForGenre/{genero}")
+def UserForGenre (genero : str):
 
     # Importa el archivo
     df_user_gen = pd.read_parquet('Archivos API/def_userforgenre.parquet')
@@ -95,7 +100,8 @@ def UserForGenre (genero):
 
 # Devuelve el top 3 de desarrolladores con juegos MÁS recomendados por usuarios para el año dado. Se analiza basado
 # en las variablses recommend = True y sentiment_analysis = 2 (positivo).
-def best_developer_year (anio):
+@app.get("/best_developer_year/{anio}")
+def best_developer_year (anio : int):
 
     # Importa el archivo
     df_best_dev = pd.read_parquet('Archivos API/def_best_dev.parquet')
@@ -129,7 +135,8 @@ def best_developer_year (anio):
 # Devuelve un diccionario con el nombre del desarrollador ingresado por parametro como llave y una lista con la 
 # cantidad total de registros de reseñas de usuarios que se encuentren categorizados con un análisis de sentimiento 
 # como valor positivo o negativo.
-def developer_reviews_analysis (desarrolladora):
+@app.get("/developer_reviews_analysis/{desarrolladora}")
+def developer_reviews_analysis (desarrolladora : str):
 
     # Importa el archivo
     df_dev_rev = pd.read_parquet('Archivos API/def_dev_rev.parquet')
@@ -145,7 +152,8 @@ def developer_reviews_analysis (desarrolladora):
     return {f"{desarrolladora}":[f'Negative = {df_dev[df_dev['sentiment_analysis']==0].shape[0]}',
                                  f'Positive = {df_dev[df_dev['sentiment_analysis']==2].shape[0]}']}
 
-def recomendacion_juego (id_producto):
+@app.get("/recomendacion_juego/{id_producto}")
+def recomendacion_juego (id_producto : int):
 
     lista_reco = []
     
